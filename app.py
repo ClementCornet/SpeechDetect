@@ -24,6 +24,9 @@ if __name__ == '__main__':
         features.extract_mfcc(audio).T for audio in train_audios
     ]
 
+    lpcs = [
+        features.extract_lpc(audio) for audio in train_audios
+    ]
     
 
     audio_bytes = audio_recorder(sample_rate=22050)
@@ -32,9 +35,20 @@ if __name__ == '__main__':
         with open('temp.wav', 'wb') as f:
             f.write(audio_bytes)
         mfcc_test = features.extract_mfcc("temp.wav").T
+
+        lpc_test = features.extract_lpc("temp.wav")
+        #st.write(lpc_test)
         
 
         ddd = [np.sum(features.dtw_distance(mfcc_test, mfccs[i])) for i in range(len(train_audios))]
-        st.write('PREDICTED : ', train_labels[np.argmin(ddd)])
-        
+        lll = [np.linalg.norm(lpc_test - lpcs[i], ord=2) for i in range(len(train_audios))]
+        st.write('PREDICTED MFCC: ', train_labels[np.argmin(ddd)])
+        st.write('PREDICTED LPC : ', train_labels[np.argmin(lll)])
+
+        df = pd.DataFrame()
+        df.index = [t.split('\\')[-1] for t in train_audios]
+        df['lpc_dist'] = lll
+        df['mfcc_dtw'] = ddd
+        st.write(df.sort_values('lpc_dist', ascending=True).style.highlight_min())
+
         os.remove('temp.wav')
