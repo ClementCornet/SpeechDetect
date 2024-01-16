@@ -14,11 +14,11 @@ import os
 
 if __name__ == '__main__':
 
-    st.write('Pomme/Pasteque/Carotte')
+    st.write('Coco/Banane/Cerise')
 
-    audios = utils.get_audios(type='veg')
-    train_audios = [a for a in audios[0] if 'poireau' not in a]
-    train_labels = [a for a in audios[1] if 'poireau' not in a]
+    audios = utils.get_audios(type='veg2')
+    train_audios = [a for a in audios[0] if 'pomme' not in a]
+    train_labels = [a for a in audios[1] if 'pomme' not in a]
     
     mfccs = [
         features.extract_mfcc(audio).T for audio in train_audios

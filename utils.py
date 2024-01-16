@@ -19,6 +19,8 @@ def get_audios(type=''):
         pattern = './data_custom/*'
     if type == 'veg':
         pattern = './data_veg/*'
+    if type == 'veg2':
+        pattern = './data_veg2/*'
 
     files = glob.glob(pattern)
     labels = [re.findall('[a-z]+', f.split('.')[1])[-1] for f in files]
