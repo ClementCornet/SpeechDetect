@@ -3,7 +3,7 @@ import librosa
 def extract_mfcc(filepath):
     """
     Extract MFCCs for a given .wav file
-    Return 20 MFCCs
+    Return 13 MFCCs
     """
     y, sr = librosa.load(filepath)
     mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
@@ -12,10 +12,10 @@ def extract_mfcc(filepath):
 def extract_lpc(filepath):
     """
     Extract LPC for a given .wav file
-    LPC at order 10, using Burg's method
+    LPC at order 3, using Burg's method
     """
     y, sr = librosa.load(filepath)
-    return librosa.lpc(y, order=40)
+    return librosa.lpc(y, order=3)
 
 
 def dtw_distance(template, test):

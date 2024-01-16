@@ -42,13 +42,13 @@ if __name__ == '__main__':
 
         ddd = [np.sum(features.dtw_distance(mfcc_test, mfccs[i])) for i in range(len(train_audios))]
         lll = [np.linalg.norm(lpc_test - lpcs[i], ord=2) for i in range(len(train_audios))]
-        st.write('PREDICTED MFCC: ', train_labels[np.argmin(ddd)])
-        st.write('PREDICTED LPC : ', train_labels[np.argmin(lll)])
+        st.write('Prediction with MFCC: ', train_labels[np.argmin(ddd)])
+        st.write('Prediction with LPC : ', train_labels[np.argmin(lll)])
 
         df = pd.DataFrame()
         df.index = [t.split('\\')[-1] for t in train_audios]
         df['lpc_dist'] = lll
         df['mfcc_dtw'] = ddd
-        st.write(df.sort_values('lpc_dist', ascending=True).style.highlight_min())
+        #st.write(df.sort_values('lpc_dist', ascending=True).style.highlight_min())
 
         os.remove('temp.wav')
