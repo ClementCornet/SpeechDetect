@@ -10,6 +10,8 @@ import features
 from audio_recorder_streamlit import audio_recorder
 import os
 
+from hmmlearn import hmm
+
 
 
 if __name__ == '__main__':
@@ -28,6 +30,20 @@ if __name__ == '__main__':
         features.extract_lpc(audio) for audio in train_audios
     ]
     
+
+    model_coco = hmm.GMMHMM(n_components=2, n_mix=1)
+    model_cerise = hmm.GMMHMM(n_components=2, n_mix=1)
+    model_banane = hmm.GMMHMM(n_components=2, n_mix=1)
+
+    train_audios, train_labels = utils.get_audios(type='veg2')
+    for audio in train_audios:
+        mfcc = features.extract_mfcc(audio)
+        if 'coco' in audio:
+            model_coco.fit(mfcc)
+        elif 'banane' in audio:
+            model_banane.fit(mfcc)
+        elif 'cerise' in audio:
+            model_cerise.fit(mfcc)
 
     audio_bytes = audio_recorder(sample_rate=22050)
     if audio_bytes:
@@ -50,5 +66,13 @@ if __name__ == '__main__':
         df['lpc_dist'] = lll
         df['mfcc_dtw'] = ddd
         #st.write(df.sort_values('lpc_dist', ascending=True).style.highlight_min())
+
+        
+
+        score_coco, score_banane, score_cerise = model_coco.score(mfcc_test.T), model_banane.score(mfcc_test.T), model_cerise.score(mfcc_test.T)
+        
+        #st.write(f"coco {score_coco}, banane {score_banane}, cerise {score_cerise}")
+        st.write(f"Prediction with GMMHMM: {['coco', 'banane', 'cerise'][np.argmax([score_coco, score_banane, score_cerise])]}")
+        #st.write(f"GMMHMM PREDICTION MIN: {['coco', 'banane', 'cerise'][np.argmin([score_coco, score_banane, score_cerise])]}")
 
         os.remove('temp.wav')
