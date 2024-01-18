@@ -5,3 +5,4 @@ streamlit
 
 librosa
 audio_recorder_streamlit
+hmmlearn
